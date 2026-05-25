@@ -27,7 +27,7 @@
 ### Conditioning Circuit
 
 <p align="center">
-  <img src="images/Single_Conditioning_Circuit.png" width="900">
+  <img src="images/Single_Channel_Conditioning_Circuit.png" width="900">
 </p>
 
 ### Frequency Response Bode Plot
