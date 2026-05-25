@@ -11,7 +11,7 @@
 ### Single-Channel SISO Prototype
 
 <p align="center">
-  <img src="images/SISO_Stripboard_Build.png" width="700">
+  <img src="images/SISO_Stripboard_Build.jpg" width="700">
 </p>
 
 ### Three-Phase MIMO Prototype
