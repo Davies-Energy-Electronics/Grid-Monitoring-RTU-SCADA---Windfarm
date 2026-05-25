@@ -1,52 +1,61 @@
-# ESP32 Grid Monitoring RTU Proxy (Windfarm SCADA)
+# ESP32 Grid Monitoring RTU Proxy
 
-A low-cost, edge-computing Remote Terminal Unit (RTU) proxy based on the ESP32 architecture. Designed for real-time wind farm substations to bridge physical grid telemetry with master SCADA architectures using the DNP3 protocol.
+An ESP32-based Remote Terminal Unit (RTU) proxy designed for real-time wind farm substation monitoring. This system bridges physical grid telemetry with master SCADA architectures via the DNP3 protocol. 
 
-## System Architecture
-
-The unit leverages the ESP32 dual-core processor to isolate deterministic tasks: Core 0 handles the asynchronous DNP3 outstation stack and network telemetry, while Core 1 performs high-speed ADC sampling, digital filtering, and updates the local HMI.
-
-![System Architecture](images/system_architecture.png)
-
-### Key Specifications
-* **Processor:** ESP32 (Dual-Core Xtensa @ 240MHz, integrated Wi-Fi/BLE)
-* **Telemetry Protocol:** DNP3 (Distributed Network Protocol v3.0) Level 2 compliant Outstation
-* **Sampling Rate:** Configurable up to 4kHz per channel for wave-shape integrity
-* **Local Interface:** SPI-driven TFT HMI for real-time hardware diagnostics and metrics
+The architecture utilizes a dual-core design to decouple asynchronous network operations from high-speed, deterministic analog signal processing.
 
 ---
 
-## Signal Conditioning & Hardware
+## 🖥️ SCADA & HMI Interface
 
-To interface the 3.3V single-ended ESP32 internal ADCs with industrial grid instrumentation transformers (CTs and PTs), a custom analog front-end was developed.
+The local Human Machine Interface (HMI) provides operators with zero-latency physical status verification, maintaining operational visibility independent of upstream wide-area network (WAN) connectivity.
 
-![Hardware and Prototype Setup](images/hardware_setup.png)
+![SCADA Dashboard](images/SCADA_Dashboard.png)
 
-### Front-End Engineering Features:
-* **Galvanic Isolation:** High-transient isolation to protect digital logic from grid surges.
-* **Biasing & Scaling:** Active op-amp circuitry providing a precise DC bias offset (+1.65V) and attenuation to match the 0–3.3V input range.
-* **Anti-Aliasing:** Active 2nd-order low-pass filters to prevent high-frequency grid noise from aliasing during digital signal processing.
-
----
-
-## Human Machine Interface (HMI)
-
-The local HMI provides substation technicians with zero-latency physical status verification independent of the upstream SCADA network connection.
-
-![HMI Dashboard](images/hmi_dashboard.png)
-
-### Monitored Grid Metrics:
-* **Phase Parameters:** Three-phase AC voltage and current waveforms / RMS calculation.
-* **Grid State:** Real-time frequency variations ($\pm 0.01\text{ Hz}$ accuracy) and active power calculations.
-* **Network Status:** DNP3 link-layer heartbeat, session states, and transmit/receive fault logs.
+### Core Metrics:
+* **Three-Phase Parameters:** Calculates RMS voltage, current, and phase angles.
+* **Grid Frequency:** Monitored via high-resolution timers to catch deviations ($\pm 0.01\text{ Hz}$ resolution).
+* **Telemetry Diagnostics:** Tracks DNP3 link-layer states, polling frequencies, and network fault logs.
 
 ---
 
-## Directory Structure
+## ⚡ Analog Signal Conditioning Front-End
+
+A custom analog front-end interfaces the single-ended 3.3V ESP32 internal ADCs with industrial instrumentation transformers (CTs/PTs). The circuitry steps down AC grid voltages, introduces a stable +1.65V DC bias offset, and acts as a second-order anti-aliasing low-pass filter.
+
+### Circuit Schematics (LTSpice)
+Configurations were validated for low phase distortion and thermal stability across single-channel and multi-input multi-output (MIMO) topologies.
+
+| Single-Channel Conditioning Circuit | LCL Filter MIMO Conditioning Circuit |
+| :---: | :---: |
+| ![Single Channel Circuit](images/Single_Channel_Conditioning_Circuit.png) | ![LCL Filter MIMO Circuit](images/LCL_Filter_MIMO_Conditioning_Circuit_LTSpice.png) |
+
+### Simulation & Verification
+Frequency and transient response simulations verify wave-shape integrity before digitization.
+* **Frequency Domain:** Bode analysis confirms a flat response across nominal operating frequencies (50/60 Hz) alongside high-frequency harmonic attenuation.
+* **Transient Analysis:** Confirms phase-aligned, balanced voltage waveforms mapped strictly within the safe 0–3.3V ADC input thresholds.
+
+| Bode Plot Analysis | LCL Filter Output Waveform | Three-Phase Voltage to ADC Output |
+| :---: | :---: | :---: |
+| ![Bode Plot](images/Bode_Plot.png) | ![LCL Filter Output](images/LCL_Filter_Output.png) | ![Three Phase Output](images/Three_Phase_V_to_ADC_Output.png) |
+
+---
+
+## 🛠️ Hardware Prototyping
+
+Physical prototypes were built on rugged stripboard layouts to validate signal integrity, EMI resilience, and component placement under thermal loads.
+
+| SISO Stripboard Prototype Build | MIMO Stripboard System Build |
+| :---: | :---: |
+| ![SISO Build](images/SISO_Stripboard_Build.jpg) | ![MIMO Build](images/MIMO_Stripboard_Build.jpg) |
+
+---
+
+## 📂 Repository Structure
 
 ```text
-├── docs/               # Technical dissertation and design documentation
-├── hardware/           # Schematics, PCB layouts, and analog simulation files
-├── hmi/                # Nextion / TFT HMI interface assets and UI codebase
-├── src/                # ESP32 firmware source code (DNP3 stack, ADC drivers, DSP)
-└── images/             # Documentation visuals
+├── docs/               # Technical dissertation, design criteria, and analytical logs
+├── hardware/           # Schematics, BOM, component datasheets, and LTSpice files
+├── hmi/                # Display assets, configuration files, and localized UI codebase
+├── src/                # ESP32 Core firmware (DNP3 outstation stack, ADC sampling, DSP)
+└── images/             # System documentation and visual assets
