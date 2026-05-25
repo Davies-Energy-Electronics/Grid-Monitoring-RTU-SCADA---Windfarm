@@ -1,29 +1,25 @@
-# Python HMI
+# Python SCADA HMI
 
-Human-Machine Interface for the ESP32 RTU.
+Full-featured Human-Machine Interface for the MIMO RTU.
 
-## Current Status
+## Features
 
-This folder is under active development. The goal is a clean, cross-platform desktop application for real-time monitoring and configuration of the RTU.
+- Reads live telemetry from the ESP32/Feather via USB-Serial (115200 baud)
+- Displays all RMS voltages & currents, frequencies, THD, phase angles and power quantities
+- Real-time three-phase waveform reconstruction
+- Alarm status with colour coding
+- PDS / Grid Code compliance indicators
+- Live DNP3 frame inspector (raw bytes)
 
-## Planned Features
+This is the same dashboard shown in **Figure 4.10** of the dissertation.
 
-- Real-time display of voltage, current, frequency, and RMS values
-- Trending / historical charts
-- DNP3 client to poll the RTU
-- Alarm and event logging
-- Configuration interface
-- Data export (CSV)
+## How to Run
 
-## Recommended Stack
-
-- **PySide6** or **Dear PyGui** (lightweight)
-- `pydnp3` or similar for DNP3 communication
-- Plotly / Matplotlib for charting
-
-## Setup (when code is added)
+1. Connect the ESP32/Feather to your PC via USB.
+2. **Close the Arduino Serial Monitor** (important — only one program can use the port).
+3. Run the HMI:
 
 ```bash
 cd python_hmi
-pip install -r requirements.txt
-python main.py
+pip install pyserial
+python SCADA_HMI.py
