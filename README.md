@@ -1,162 +1,81 @@
-# Grid Monitoring RTU & SCADA for Wind Farms
+# Grid Monitoring RTU & SCADA – Wind Farm Application
 
-**Low-cost ESP32-based SCADA RTU proxy with DNP3 telemetry, advanced signal conditioning, and Python HMI.**
+Low-cost ESP32-based Remote Terminal Unit (RTU) with DNP3 support, custom signal conditioning hardware, and Python HMI for grid parameter monitoring in wind energy systems.
 
-A complete open-source hardware + firmware + software solution for monitoring grid parameters in wind farm applications. Designed for affordability, real-time performance, and industrial protocol compatibility (DNP3).
+## Overview
 
-<p align="center">
-  <img src="images/SCADA_Dashboard.png" width="800" alt="SCADA Dashboard">
-</p>
+This project implements an affordable monitoring solution for wind farm grid connection points. The system acquires three-phase voltage and current signals, performs real-time RMS and frequency calculations on an ESP32, and exposes the data via DNP3 to a SCADA master. A companion Python HMI provides local visualisation, trending, and configuration.
 
----
+The design includes both single-channel (SISO) and three-phase (MIMO) prototypes, supported by LTSpice modelling and full documentation.
 
-## ✨ Features
+## Project Structure
 
-- **ESP32-based RTU** with high-speed ADC sampling, RMS calculation, frequency measurement, and phase analysis.
-- **DNP3 Outstation** support for standard SCADA communication.
-- **Custom signal conditioning** hardware for safe grid voltage/current interfacing (including LCL filter modeling).
-- **Python HMI** for real-time visualization, trending, alarms, and configuration.
-- **Prototypes**: Single-channel SISO and three-phase MIMO builds.
-- **Simulation & Modeling**: LTSpice models for system validation.
-- **Low-cost focus**: Suitable for educational, research, and small-scale deployments.
+- **`/firmware`** – ESP32 code (ADC sampling, RMS, frequency measurement, DNP3 outstation)
+- **`/hardware`** – Schematics, BOM, and build information
+- **`/python_hmi`** – Python-based Human Machine Interface
+- **`/ltspice`** – Simulation models (MIMO system + LCL filter)
+- **`/docs`** – Dissertation and supporting documents
+- **`/images`** – Photos and diagrams
 
----
+## Key Features
 
-## 📁 Project Structure
+- High-speed ADC sampling and real-time signal processing on ESP32
+- DNP3 protocol support for SCADA integration
+- Custom analogue front-end with scaling, filtering and protection
+- Python HMI for real-time display and data logging
+- Comprehensive documentation including modelling and experimental results
 
-| Folder              | Content |
-|---------------------|---------|
-| `/firmware`         | ESP32 Arduino code (ADC, RMS, frequency, DNP3) |
-| `/hardware`         | Schematics, PCB designs, BOM |
-| `/python_hmi`       | Python-based Human-Machine Interface |
-| `/ltspice`          | Simulation models (MIMO + LCL) |
-| `/docs`             | Dissertation, additional documentation |
-| `/images`           | Screenshots and build photos |
-
----
-
-## 🛠 Quick Start
+## Getting Started
 
 ### Hardware
-1. Build the signal conditioning board (see `/hardware` and dissertation for schematics).
-2. Assemble the ESP32 prototype (stripboard versions available for SISO and MIMO).
-3. Connect CT/PT sensors safely to the grid/wind turbine output.
-
-**⚠️ Safety Note**: High voltage work requires proper isolation, qualified personnel, and adherence to electrical safety standards.
+Refer to the schematics and photos in `/hardware`. Prototypes were built on stripboard for both SISO and MIMO versions. Proper isolation and safety precautions are essential when interfacing with grid voltages.
 
 ### Firmware
-1. Open the project in Arduino IDE or **PlatformIO** (recommended).
-2. Configure Wi-Fi / Ethernet and DNP3 settings in `config.h`.
-3. Flash to ESP32.
-4. Verify telemetry via serial monitor or DNP3 master.
+Open the project in Arduino IDE or PlatformIO (recommended), configure Wi-Fi/Ethernet and DNP3 settings, then flash to the ESP32. Detailed instructions are in the `/firmware` folder.
 
 ### Python HMI
-(See `/python_hmi` folder for setup instructions once populated.)
+Under active development. See `/python_hmi` for current status and setup.
+
+## Documentation
+
+Full technical details, design methodology, test results and analysis are in the dissertation:
+
+[**RTU_SCADA_WindFarm_Dissertation_Public.pdf**](docs/RTU_SCADA_WindFarm_Dissertation_Public.pdf.pdf)
+
+## Gallery
+
+**Three-Phase MIMO Prototype**  
+![MIMO Build](images/MIMO_Stripboard_Build.jpg)
+
+**Signal Conditioning Circuit**  
+![Conditioning Circuit](images/Single_Channel_Conditioning_Circuit.png)
+
+**LTSpice Model**  
+![LTSpice Schematic](images/LCL_Filter_MIMO_Conditioning_Circuit_LTSpice.png)
+
+**Example Three-Phase Output**  
+![Three Phase Traces](images/Three_Phase_V_to_ADC_Output.png)
+
+## Results & Performance
+
+Key results (sampling rates, accuracy figures, system cost, etc.) are detailed in the dissertation.
+
+## Future Work
+
+- Complete the Python HMI with live trending and alarms
+- Migrate to proper PCBs
+- Add Modbus support
+- Enhance security and multi-RTU coordination
+- Field testing on a microgrid or small wind turbine
+
+## Acknowledgements
+
+Developed by **Jack Davies** under the supervision of **Dr Lei Kang**.
+
+## License
+
+MIT License. See the [LICENSE](LICENSE) file for details.
 
 ---
 
-## 📊 Architecture Overview
-
-The system acts as an **RTU proxy** between the physical grid/wind turbine sensors and a central SCADA master.
-
-**Key Components**:
-- **Analog Front-End**: Signal conditioning (scaling, filtering, protection) for 3-phase voltage/current.
-- **ESP32 RTU**: Samples signals → computes RMS, frequency, power metrics → serves data via DNP3.
-- **Communication**: DNP3 over TCP/IP (primary), with potential Modbus fallback.
-- **HMI**: Python application for local/remote monitoring and control.
-- **Modeling**: LTSpice used to validate MIMO + LCL filter behavior.
-
-(Insert architecture diagram here — e.g., a block diagram exported from your dissertation.)
-
----
-
-## 📸 Hardware Implementation
-
-### Single-Channel SISO Prototype
-<p align="center">
-  <img src="images/SISO_Stripboard_Build.jpg" width="700" alt="Single Channel Prototype">
-</p>
-
-### Three-Phase MIMO Prototype
-<p align="center">
-  <img src="images/MIMO_Stripboard_Build.jpg" width="700" alt="Three Phase Prototype">
-</p>
-
----
-
-## 🔬 Signal Conditioning Design
-
-### Conditioning Circuit
-<p align="center">
-  <img src="images/Single_Channel_Conditioning_Circuit.png" width="900" alt="Conditioning Circuit">
-</p>
-
-### Frequency Response (Bode Plot)
-<p align="center">
-  <img src="images/Bode_Plot.png" width="900" alt="Bode Plot">
-</p>
-
----
-
-## 🔧 Three-Phase System Modelling
-
-### MIMO + LCL System Schematic
-<p align="center">
-  <img src="images/LCL_Filter_MIMO_Conditioning_Circuit_LTSpice.png" width="1000" alt="LTSpice Schematic">
-</p>
-
-### ADC-Ready Three-Phase Voltage Traces
-<p align="center">
-  <img src="images/Three_Phase_V_to_ADC_Output.png" width="900" alt="Three Phase Traces">
-</p>
-
----
-
-## 📚 Documentation
-
-- **Full Dissertation**: [`docs/RTU_SCADA_WindFarm_Dissertation_Public.pdf`](docs/RTU_SCADA_WindFarm_Dissertation_Public.pdf) — Detailed design, methodology, results, and analysis.
-- Hardware schematics and BOM (in `/hardware`)
-- Firmware documentation (in `/firmware`)
-- HMI guide (in `/python_hmi`)
-
----
-
-## 🚀 Roadmap / Future Work
-
-- Complete and expand the Python HMI with real-time charting and DNP3 client.
-- Add more robust error handling and logging in firmware.
-- PCB design (move beyond stripboard).
-- Multi-RTU wind farm simulation.
-- Security hardening (authentication, encryption for DNP3).
-- Field testing on actual wind turbine or lab microgrid.
-
----
-
-## 🧪 Results & Performance
-
-(Extract key results from your dissertation, e.g.:
-- Sampling rate achieved: XX kHz
-- RMS accuracy: ±X%
-- DNP3 polling latency: XX ms
-- Total system cost: ~$XX)
-
----
-
-## 📄 License
-
-This project is licensed under the **MIT License** — see [LICENSE](LICENSE) file for details.
-
----
-
-## 🙏 Acknowledgements
-
-- Dissertation supervisor / university (add if desired)
-- Open-source libraries used (DNP3, Arduino, etc.)
-
----
-
-**Contributions welcome!** See [CONTRIBUTING.md](CONTRIBUTING.md) for guidelines.
-
----
-
-*Built as part of [Your Name]’s academic / research work on low-cost renewable energy monitoring systems.*
+Contributions and suggestions are welcome.
