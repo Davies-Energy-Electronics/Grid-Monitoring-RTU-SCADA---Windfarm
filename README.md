@@ -1,45 +1,52 @@
-# Grid Monitoring RTU & SCADA – Wind Farm Application
+# ESP32 Grid Monitoring RTU Proxy (Windfarm SCADA)
 
-Low-cost ESP32-based Remote Terminal Unit (RTU) with DNP3 support, custom signal conditioning hardware, and a complete Python SCADA HMI for real-time grid monitoring in wind energy systems.
+A low-cost, edge-computing Remote Terminal Unit (RTU) proxy based on the ESP32 architecture. Designed for real-time wind farm substations to bridge physical grid telemetry with master SCADA architectures using the DNP3 protocol.
 
-## Overview
+## System Architecture
 
-This project implements an end-to-end monitoring solution for wind farm grid connection points. The system acquires three-phase voltage and current signals, performs real-time RMS, frequency, THD and power calculations on an ESP32, and transmits data using the DNP3 (IEEE 1815) protocol. A full-featured Python HMI provides live visualisation, waveform reconstruction, alarms, and compliance monitoring.
+The unit leverages the ESP32 dual-core processor to isolate deterministic tasks: Core 0 handles the asynchronous DNP3 outstation stack and network telemetry, while Core 1 performs high-speed ADC sampling, digital filtering, and updates the local HMI.
 
-Developed by **Jack Davies** under the supervision of **Dr Lei Kang**.
+![System Architecture](images/system_architecture.png)
 
-## Key Features
+### Key Specifications
+* **Processor:** ESP32 (Dual-Core Xtensa @ 240MHz, integrated Wi-Fi/BLE)
+* **Telemetry Protocol:** DNP3 (Distributed Network Protocol v3.0) Level 2 compliant Outstation
+* **Sampling Rate:** Configurable up to 4kHz per channel for wave-shape integrity
+* **Local Interface:** SPI-driven TFT HMI for real-time hardware diagnostics and metrics
 
-- High-speed ADC sampling and real-time signal processing on ESP32
-- DNP3 outstation implementation
-- Custom analogue signal conditioning with protection and filtering
-- Complete Python SCADA HMI with live three-phase waveform
-- Single-channel (SISO) and three-phase (MIMO) prototypes
-- LTSpice modelling and validation
+---
 
-## Results & Performance
+## Signal Conditioning & Hardware
 
-→ Add your key results from the dissertation here (sampling rate, accuracy, cost, etc.)
+To interface the 3.3V single-ended ESP32 internal ADCs with industrial grid instrumentation transformers (CTs and PTs), a custom analog front-end was developed.
 
-## Project Structure
+![Hardware and Prototype Setup](images/hardware_setup.png)
 
-- **`/firmware`** – ESP32 code (ADC, RMS, frequency, DNP3)
-- **`/hardware`** – Schematics, BOM, build photos
-- **`/python_hmi`** – Complete SCADA HMI dashboard
-- **`/ltspice`** – Simulation models
-- **`/docs`** – Full dissertation
-- **`/images`** – Photos and diagrams
+### Front-End Engineering Features:
+* **Galvanic Isolation:** High-transient isolation to protect digital logic from grid surges.
+* **Biasing & Scaling:** Active op-amp circuitry providing a precise DC bias offset (+1.65V) and attenuation to match the 0–3.3V input range.
+* **Anti-Aliasing:** Active 2nd-order low-pass filters to prevent high-frequency grid noise from aliasing during digital signal processing.
 
-## Getting Started
+---
 
-### Hardware
-Refer to `/hardware` for schematics and photos. **High voltage safety precautions required.**
+## Human Machine Interface (HMI)
 
-### Firmware
-Open in Arduino IDE or PlatformIO, configure `config.h`, and flash to ESP32.
+The local HMI provides substation technicians with zero-latency physical status verification independent of the upstream SCADA network connection.
 
-### Python HMI
-```bash
-cd python_hmi
-pip install -r requirements.txt
-python SCADA_HMI.py
+![HMI Dashboard](images/hmi_dashboard.png)
+
+### Monitored Grid Metrics:
+* **Phase Parameters:** Three-phase AC voltage and current waveforms / RMS calculation.
+* **Grid State:** Real-time frequency variations ($\pm 0.01\text{ Hz}$ accuracy) and active power calculations.
+* **Network Status:** DNP3 link-layer heartbeat, session states, and transmit/receive fault logs.
+
+---
+
+## Directory Structure
+
+```text
+├── docs/               # Technical dissertation and design documentation
+├── hardware/           # Schematics, PCB layouts, and analog simulation files
+├── hmi/                # Nextion / TFT HMI interface assets and UI codebase
+├── src/                # ESP32 firmware source code (DNP3 stack, ADC drivers, DSP)
+└── images/             # Documentation visuals
