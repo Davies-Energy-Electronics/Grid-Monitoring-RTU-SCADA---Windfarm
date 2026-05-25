@@ -1,31 +1,25 @@
 # Grid Monitoring RTU & SCADA – Wind Farm Application
 
-Low-cost ESP32-based Remote Terminal Unit with DNP3 support, custom signal conditioning hardware, and a full Python SCADA HMI for real-time grid monitoring in wind energy systems.
+Low-cost ESP32-based Remote Terminal Unit (RTU) with DNP3 support, custom signal conditioning hardware, and a complete Python SCADA HMI for real-time grid monitoring in wind energy systems.
 
 ## Overview
 
-This project delivers an end-to-end, affordable monitoring solution for wind farm grid connection points. It acquires three-phase voltage and current signals, performs real-time RMS, frequency, THD and power calculations on an ESP32, and transmits data using DNP3. A complete Python HMI provides live visualisation, alarms, waveform reconstruction, and compliance monitoring.
+This project implements an end-to-end monitoring solution for wind farm grid connection points. The system acquires three-phase voltage and current signals, performs real-time RMS, frequency, THD and power calculations on an ESP32, and transmits data using the DNP3 (IEEE 1815) protocol. A full-featured Python HMI provides live visualisation, waveform reconstruction, alarms, and compliance monitoring.
 
-Developed as final-year dissertation work under the supervision of **Dr Lei Kang**.
+Developed by **Jack Davies** under the supervision of **Dr Lei Kang**.
 
 ## Key Features
 
-- High-speed ADC sampling and real-time processing on ESP32
-- DNP3 IEEE 1815 outstation implementation
+- High-speed ADC sampling and real-time signal processing on ESP32
+- DNP3 outstation implementation
 - Custom analogue signal conditioning with protection and filtering
-- Full Python SCADA HMI (live waveform + alarms + compliance)
+- Complete Python SCADA HMI with live three-phase waveform
 - Single-channel (SISO) and three-phase (MIMO) prototypes
-- Detailed LTSpice modelling and validation
+- LTSpice modelling and validation
 
 ## Results & Performance
 
-(Add your key numbers here from the dissertation)
-
-- Sampling rate: XX kS/s
-- RMS voltage accuracy: ±X.X%
-- Frequency accuracy: ±0.X Hz
-- Successful real-time DNP3 telemetry transmission
-- Total prototype cost: ~£XX
+→ Add your actual results from the dissertation here (sampling rate, accuracy, cost, etc.)
 
 ## Project Structure
 
@@ -39,7 +33,7 @@ Developed as final-year dissertation work under the supervision of **Dr Lei Kang
 ## Getting Started
 
 ### Hardware
-See `/hardware` folder for schematics and photos. Prototypes were built on stripboard. **High voltage safety precautions are essential.**
+Refer to `/hardware` for schematics and photos. **High voltage safety precautions required.**
 
 ### Firmware
 Open in Arduino IDE or PlatformIO, configure `config.h`, and flash to ESP32.
@@ -47,5 +41,5 @@ Open in Arduino IDE or PlatformIO, configure `config.h`, and flash to ESP32.
 ### Python HMI
 ```bash
 cd python_hmi
-pip install pyserial
+pip install -r requirements.txt
 python SCADA_HMI.py
