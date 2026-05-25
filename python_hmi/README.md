@@ -1,25 +1,26 @@
-# Python SCADA HMI
+# Python SCADA HMI Dashboard
 
-Full-featured Human-Machine Interface for the MIMO RTU.
+Full-featured Human-Machine Interface for the MIMO Grid Monitoring RTU.
+
+This is the same SCADA HMI shown in **Figure 4.10** of the dissertation (Appendix E).
 
 ## Features
 
-- Reads live telemetry from the ESP32/Feather via USB-Serial (115200 baud)
-- Displays all RMS voltages & currents, frequencies, THD, phase angles and power quantities
-- Real-time three-phase waveform reconstruction
-- Alarm status with colour coding
-- PDS / Grid Code compliance indicators
-- Live DNP3 frame inspector (raw bytes)
+- Real-time display of three-phase RMS voltages and currents
+- Frequency, THD, phase angle, and power measurements
+- Reconstructed three-phase voltage waveform
+- Alarm status with colour-coded indicators
+- PDS / Grid Code compliance monitoring
+- Live DNP3 IEEE 1815 frame inspector (raw bytes)
+- Automatic serial reconnection
 
-This is the same dashboard shown in **Figure 4.10** of the dissertation.
+## Requirements
 
-## How to Run
+- Python 3.8 or higher
+- ESP32/Feather sending serial telemetry at **115200 baud**
 
-1. Connect the ESP32/Feather to your PC via USB.
-2. **Close the Arduino Serial Monitor** (important — only one program can use the port).
-3. Run the HMI:
+### Install Dependencies
 
 ```bash
 cd python_hmi
-pip install pyserial
-python SCADA_HMI.py
+pip install -r requirements.txt
