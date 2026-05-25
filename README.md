@@ -19,7 +19,7 @@ Developed by **Jack Davies** under the supervision of **Dr Lei Kang**.
 
 ## Results & Performance
 
-→ Add your actual results from the dissertation here (sampling rate, accuracy, cost, etc.)
+→ Add your key results from the dissertation here (sampling rate, accuracy, cost, etc.)
 
 ## Project Structure
 
